@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Dashboard.css';
-import Header from './Header';
+import Header from '../Header/Header';
 import { Link } from 'react-router-dom';
 
 
