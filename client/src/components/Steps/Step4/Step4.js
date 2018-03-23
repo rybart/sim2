@@ -2,8 +2,32 @@ import React, { Component } from 'react';
 import './Step4.css';
 import Header from '../../Header/Header';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators} from 'redux';
+import {step4} from'../../../Redux/Actions/action';
 
 class Step4 extends Component {
+    constructor(props){
+
+        super(props)
+        this.state ={
+            loan_amount:'',
+            mortgage:'',
+        }
+        this.handleChange = this.handleChange.bind(this);
+        this.step4 = this.step4.bind(this);
+        
+        
+    }
+    step4(){
+        this.props.step4(this.state)
+        this.props.history.push('/wizard/5')
+    }
+    handleChange(e){
+        this.setState({
+            [e.target.name]: e.target.value,
+        });
+    }
   render() {
     return (
         <div className="Step4">
@@ -29,18 +53,16 @@ class Step4 extends Component {
                     <div className="step4LoanAmount">
                         <p className="Loan">Loan Amount</p>
                     </div>
-                    <input type="text" className="loanAmount"/>
+                    <input type="text" className="loanAmount" value = {this.state.loan_amount} onChange={this.handleChange} name = 'loan_amount'/>
                     <div className="step4MonthlyMortgage">
                         <p className="mortgage">Monthly Mortgage</p>
                     </div>
-                    <input type="text" className="mortgage"/>
+                    <input type="text" className="mortgage" value = {this.state.mortgage} onChange={this.handleChange} name = 'mortgage'/>
                     <div className="Step4ButtonContainer">
                         <Link to= '/wizard/3'>
                         <button className="previousStep4">Previous Step</button>
                         </Link>
-                        <Link to= '/wizard/5'>
-                        <button className="nextStepStep4">Next Step</button>
-                        </Link>
+                        <button className="nextStepStep4" onClick = {this.step4} >Next Step</button>
                     </div>
                 </div>
             </div>
@@ -49,4 +71,11 @@ class Step4 extends Component {
   }
 }
 
-export default Step4;
+function mapStateToProps({step4}){
+	return {step4};
+}
+function mapDispatchToProps(dispatch){
+	return bindActionCreators({step4}, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Step4);  

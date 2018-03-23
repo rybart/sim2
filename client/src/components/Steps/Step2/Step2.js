@@ -2,8 +2,34 @@ import React, { Component } from 'react';
 import './Step2.css';
 import Header from '../../Header/Header';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators} from 'redux';
+import {step2} from'../../../Redux/Actions/action';
 
 class Step2 extends Component {
+    constructor(props){
+
+        super(props)
+        this.state ={
+            address:'',
+            city:'',
+            state:'',
+            zip:'',
+        }
+        this.handleChange = this.handleChange.bind(this);
+        this.step2 = this.step2.bind(this);
+        
+        
+    }
+    step2(){
+        this.props.step2(this.state)
+        this.props.history.push('/wizard/3')
+    }
+    handleChange(e){
+        this.setState({
+            [e.target.name]: e.target.value,
+        });
+    }
   render() {
     return (
       <div className="Step2">
@@ -29,30 +55,28 @@ class Step2 extends Component {
             <div className="Step2AddressContainer">
                 <p className="propAddress">Address</p>
             </div>
-            <input type="text" className="propertyAddress"/>
+            <input type="text" className="propertyAddress" value = {this.state.address} onChange={this.handleChange} name = 'address'/>
             <div className="Step2MiddleContainer">
                 <div className="Step2CityContainer">
                     <p className="propCity">City</p>
-                    <input type="text" className="propertyCity"/>
+                    <input type="text" className="propertyCity" value = {this.state.city} onChange={this.handleChange} name = 'city'/>
                 </div>
                 <div className="Step2StateContainer">
                     <p className="propState">State</p>
-                    <input type="text" className="propertyState"/>
+                    <input type="text" className="propertyState" value = {this.state.state} onChange={this.handleChange} name = 'state'/>
                 </div>
             </div>
             <div className="Step2ZipContainer">
                 <p className="propZip">Zip</p>
             </div>
             <div className = 'zipInputContainer'>
-            <input type="number" className="propertyZip"/>
+            <input type="number" className="propertyZip" value = {this.state.zip} onChange={this.handleChange} name = 'zip'/>
             </div>
             <div className="Step2ButtonContainer">
                 <Link to= '/wizard/1'>
                 <button className="previousStep2">Previous Step</button>
                 </Link>
-                <Link to= '/wizard/3'>
-                <button className="nextStepStep2">Next Step</button>
-                </Link>
+                <button className="nextStepStep2" onClick = {this.step2}>Next Step</button>
             </div>
         </div>
       </div>
@@ -62,4 +86,11 @@ class Step2 extends Component {
   }
 }
 
-export default Step2;
+function mapStateToProps({step2}){
+	return {step2};
+}
+function mapDispatchToProps(dispatch){
+	return bindActionCreators({step2}, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Step2);

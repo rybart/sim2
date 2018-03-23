@@ -2,8 +2,42 @@ import React, { Component } from 'react';
 import './Step5.css';
 import Header from '../../Header/Header';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators} from 'redux';
+import {step5,saveProperty} from'../../../Redux/Actions/action';
+
+
 
 class Step5 extends Component {
+    constructor(props){
+        super(props)
+        this.state={
+            desired_rent: 0
+        }
+        this.saveProperty = this.saveProperty.bind(this);
+    }
+
+    saveProperty(){
+        this.props.step5(this.state)
+        const obj = {
+            property_name: this.props.step1.property_name,
+            description: this.props.step1.description,
+            address: this.props.step2.address,
+            city: this.props.step2.city,
+            state: this.props.step2.state,
+            zip: this.props.step2.zip,
+            img: this.props.step3.img,
+            loan_amount: this.props.step4.loan_amount,
+            mortgage: this.props.step4.mortgage,
+            desired_rent: this.props.step5.desired_rent,
+        }
+        saveProperty(obj)
+            .then(() => {
+                this.props.history.push('/dashboard')
+            })
+        
+
+    }
   render() {
     return (
         <div className="Step5">
@@ -36,15 +70,18 @@ class Step5 extends Component {
                         <Link to= '/wizard/3'>
                         <button className="previousStep5">Previous Step</button>
                         </Link>
-                        <Link to= '/wizard/5'>
-                        <button className="complete">Complete</button>
-                        </Link>
+                        
+                        <button className="complete" onClick = {this.saveProperty}>Complete</button>
+                        
                     </div>
                 </div>
             </div>
         </div>
     );
-  }
+  }a
+}
+function mapDispatchToProps(dispatch){
+	return bindActionCreators({step5}, dispatch);
 }
 
-export default Step5;
+export default connect(state => state, mapDispatchToProps)(Step5);

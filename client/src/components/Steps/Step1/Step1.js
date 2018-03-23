@@ -2,9 +2,34 @@ import React, { Component } from 'react';
 import './Step1.css';
 import Header from '../../Header/Header';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators} from 'redux';
+import {step1} from'../../../Redux/Actions/action';
 
 class Step1 extends Component {
-  render() {
+    constructor(props){
+
+        super(props)
+        this.state ={
+            property_name:'',
+            description:'',
+        }
+        this.handleChange = this.handleChange.bind(this);
+        this.step1 = this.step1.bind(this);
+        
+        
+    }
+    handleChange(e){
+        this.setState({
+            [e.target.name]: e.target.value,
+        });
+    }
+
+    step1(){
+        this.props.step1(this.state)
+        this.props.history.push('/wizard/2')
+    }
+    render() {
     return (
       <div className="Step1">
       <Header/>
@@ -29,15 +54,15 @@ class Step1 extends Component {
             <div className="step1NameContainer">
                 <p className="propName">Property Name</p>
             </div>
-            <input type="text" className="propertyName"/>
+            <input type="text" className="propertyName" value = {this.state.property_name} onChange={this.handleChange} name = 'property_name'/>
             <div className="step1DescriptionContainer">
                 <p className="propDesc">Property Description</p>
             </div>
-            <textarea id="" cols="30" rows="10" className="step1Input"></textarea>
+            <textarea id="" cols="30" rows="10" className="step1Input" value = {this.state.description} onChange={this.handleChange} name = 'description'></textarea>
             <div className="step1ButtonContainer">
-                <Link to= '/wizard/2'>
-                <button className="nextStepStep1">Next Step</button>
-                </Link>
+
+                <button className="nextStepStep1" onClick={this.step1}>Next Step</button>
+                
             </div>
         </div>
       </div>
@@ -47,4 +72,11 @@ class Step1 extends Component {
   }
 }
 
-export default Step1;
+function mapStateToProps({step1}){
+	return {step1};
+}
+function mapDispatchToProps(dispatch){
+	return bindActionCreators({step1}, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Step1);

@@ -36,6 +36,9 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.use(checkDb());
 
+
+
+
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
     
@@ -63,6 +66,24 @@ app.post('/api/register', (req, res) => {
         .catch(handleDbError(res));
 });
 
+app.get('/api/properties', (req, res) => {
+    req.db.property.find()
+        .then(properties => {
+            res.send(properties);
+        })
+        .catch(handleDbError(res));        
+});
+
+app.post(`/api/properties`, (req, res) => {
+    req.db.property.insert(req.body)
+        .then(property => {
+            res.send(property)
+        })
+        .catch(handleDbError(res));
+});
+
+
+
 
 const port = process.env.PORT || 5000;
 app.listen(port, ()=>{
@@ -81,5 +102,19 @@ function checkDb() {
         else {
             res.status(500).send({ message: 'this died' });
         }
+    };
+}
+function handleDbError(res) {
+    return (err) => {
+        console.warn('hit a snag');
+        console.error(err);
+        
+        if (err.code == 'ECONNRESET') {
+            return res.status(500).send({ message: 'something died again' });
+        }
+        if (err.code == '22P02') {
+            res.status(422).send({ message: 'The request had incorrect or missing properties: ' + err.message });
+        }
+        res.status(500).send({ message: 'Internal Server Error' })
     };
 }

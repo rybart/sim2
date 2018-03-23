@@ -2,8 +2,31 @@ import React, { Component } from 'react';
 import './Step3.css';
 import Header from '../../Header/Header';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators} from 'redux';
+import {step3} from'../../../Redux/Actions/action';
 
 class Step3 extends Component {
+    constructor(props){
+
+        super(props)
+        this.state ={
+            img:'',
+        }
+        this.handleChange = this.handleChange.bind(this);
+        this.step3 = this.step3.bind(this);
+        
+        
+    }
+    step3(){
+        this.props.step3(this.state)
+        this.props.history.push('/wizard/4')
+    }
+    handleChange(e){
+        this.setState({
+            [e.target.name]: e.target.value,
+        });
+    }
     render() {
         return (
             <div className="Step3">
@@ -27,19 +50,17 @@ class Step3 extends Component {
                     </div>
                     <div className="stepContainer">
                         <div className="step3ImageContainer">
-                            <img src="" alt="Preview" className="step3Image"/>
+                            <img src={this.state.img} alt="Preview" className="step3Image"/>
                         </div>
                         <div className="step3UrlContainer">
                             <p className="imageURL">Image URL</p>
                         </div>
-                        <input type="text" className="step3URLInput"/>
+                        <input type="text" className="step3URLInput" value = {this.state.img} onChange={this.handleChange} name = 'img'/>
                         <div className="Step3ButtonContainer">
                             <Link to= '/wizard/2'>
                                 <button className="previousStep3">Previous Step</button>
                             </Link>
-                            <Link to= '/wizard/4'>
-                                <button className="nextStepStep3">Next Step</button>
-                            </Link>
+                                <button className="nextStepStep3" onClick = {this.step3}>Next Step</button>
                         </div>
                     </div>
                 </div>
@@ -48,5 +69,11 @@ class Step3 extends Component {
     }
 }
 
-export default Step3;
-                    
+function mapStateToProps({step3}){
+	return {step3};
+}
+function mapDispatchToProps(dispatch){
+	return bindActionCreators({step3}, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Step3);                    
